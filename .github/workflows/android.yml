@@ -18,10 +18,20 @@ jobs:
           java-version: '17'
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
-      - name: Build debug APK
+      - name: Build debug APKs
         run: gradle assembleDebug
-      - name: Upload APK
+
+      - name: Package each ABI separately
+        run: |
+          mkdir -p abi-zips
+          for apk in app/build/outputs/apk/debug/*.apk; do
+            name=$(basename "$apk" .apk)
+            zip -j "abi-zips/${name}.zip" "$apk"
+          done
+          ls -lh abi-zips
+
+      - name: Upload ABI ZIPs
         uses: actions/upload-artifact@v4
         with:
-          name: insecure-geckoview-browser-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: apk-zips-by-abi
+          path: abi-zips/*.zip
