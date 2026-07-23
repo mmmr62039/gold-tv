@@ -1,4 +1,6 @@
-plugins { id 'com.android.application' }
+plugins {
+    id 'com.android.application'
+}
 
 android {
     namespace 'com.example.insecurebrowser'
@@ -10,6 +12,15 @@ android {
         targetSdk 35
         versionCode 1
         versionName '1.0'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a'
+            universalApk false
+        }
     }
 }
 
